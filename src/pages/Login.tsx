@@ -9,19 +9,19 @@ interface ButtonProps {
 }
 
 export default function Login() {
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const { login } = useAuth()
+  const { login, loading, error: authError } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const success = await login(username, password)
-    if (success) {
+    try {
+      await login(email, password)
       navigate('/')
-    } else {
-      setError('帳號或密碼錯誤')
+    } catch (err) {
+      // 錯誤已在 AuthContext 中處理並設置
+      console.error(err)
     }
   }
 
@@ -49,18 +49,18 @@ export default function Login() {
           
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">帳號</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">電子郵件</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" />
                   </svg>
                 </div>
                 <input
-                  type="text"
-                  placeholder="請輸入帳號"
-                  value={username}
-                  onChange={e => setUsername(e.target.value)}
+                  type="email"
+                  placeholder="請輸入電子郵件"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                   required
                   className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-transparent transition-all duration-200 bg-white/70 backdrop-blur-sm"
                 />
@@ -86,20 +86,21 @@ export default function Login() {
               </div>
             </div>
             
-            {error && (
+            {authError && (
               <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center space-x-2">
                 <svg className="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span className="text-red-700 font-medium">{error}</span>
+                <span className="text-red-700 font-medium">{authError}</span>
               </div>
             )}
             
             <button
               type="submit"
-              className="w-full py-3 bg-sky-300 text-white rounded-xl font-semibold hover:bg-sky-400 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+              disabled={loading}
+              className="w-full py-3 bg-sky-300 text-white rounded-xl font-semibold hover:bg-sky-400 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none"
             >
-              登入
+              {loading ? '登入中...' : '登入'}
             </button>
           </div>
           

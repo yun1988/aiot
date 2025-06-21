@@ -1,46 +1,91 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react'
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
+import axios from 'axios'
+
+const API_URL = 'http://localhost:3001'
 
 interface User {
-  username: string
+  id: number
+  email: string
 }
 
 interface AuthContextType {
   user: User | null
-  login: (username: string, password: string) => Promise<boolean>
+  login: (email: string, password: string) => Promise<void>
   logout: () => void
-  register: (username: string, password: string) => Promise<boolean>
+  register: (email: string, password: string) => Promise<void>
+  loading: boolean
+  error: string | null
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  // 模擬延遲與簡單驗證
-  const login = async (username: string, password: string) => {
-    // 這裡可以改成call API
-    if (username === 'user' && password === 'password') {
-      setUser({ username })
-      return true
+  useEffect(() => {
+    // 嘗試從 localStorage 恢復登入狀態
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      setUser(JSON.parse(storedUser))
     }
-    return false
+    setLoading(false)
+  }, [])
+
+  const handleAuthSuccess = (userData: User) => {
+    setUser(userData)
+    localStorage.setItem('user', JSON.stringify(userData))
+    setError(null)
+  }
+
+  const login = async (email: string, password: string) => {
+    setError(null)
+    setLoading(true)
+    try {
+      const response = await axios.get(`${API_URL}/users`, {
+        params: { email, password },
+      })
+
+      if (response.data.length > 0) {
+        handleAuthSuccess(response.data[0])
+      } else {
+        throw new Error('電子郵件或密碼錯誤')
+      }
+    } catch (err: any) {
+      setError(err.message || '登入時發生錯誤')
+      throw err
+    } finally {
+      setLoading(false)
+    }
   }
 
   const logout = () => {
     setUser(null)
+    localStorage.removeItem('user')
   }
 
-  const register = async (username: string, password: string) => {
-    // 這裡可以call API，這裡模擬直接成功
-    if (username && password) {
-      setUser({ username })
-      return true
+  const register = async (email: string, password: string) => {
+    setError(null)
+    setLoading(true)
+    try {
+      const existingUsers = await axios.get(`${API_URL}/users`, { params: { email } })
+      if (existingUsers.data.length > 0) {
+        throw new Error('此電子郵件已被註冊')
+      }
+
+      const response = await axios.post(`${API_URL}/users`, { email, password })
+      handleAuthSuccess(response.data)
+    } catch (err: any) {
+      setError(err.message || '註冊時發生錯誤')
+      throw err
+    } finally {
+      setLoading(false)
     }
-    return false
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, register }}>
+    <AuthContext.Provider value={{ user, login, logout, register, loading, error }}>
       {children}
     </AuthContext.Provider>
   )
@@ -48,6 +93,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext)
-  if (!context) throw new Error('useAuth must be used within AuthProvider')
+  if (!context) throw new Error('useAuth must be used within an AuthProvider')
   return context
 }
