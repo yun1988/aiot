@@ -1,7 +1,7 @@
 {
   "name": "aiot",
   "version": "0.0.1",
-  "homepage": "https://[你的GitHub用戶名].github.io/aiot",
+  "homepage": "https://yun1988.github.io/aiot",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
