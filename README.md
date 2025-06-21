@@ -61,6 +61,18 @@ npm run build
 npm run preview
 ```
 
+
+# 修改代碼後
+```bash
+git add .
+git commit -m "你的更新描述"
+git push
+```
+# 部署到GitHub Pages
+```bash
+npm run deploy
+```
+
 ## 📋 功能特色
 
 - ✅ **使用者認證系統**
