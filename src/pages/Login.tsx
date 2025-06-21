@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { FiLogIn, FiMail, FiLock } from 'react-icons/fi'
 
 // Add type definition
 interface ButtonProps {
@@ -13,106 +14,88 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const { login, loading, error: authError } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || "/";
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      await login(email, password)
-      navigate('/')
+      await login(email, password);
+      navigate(from, { replace: true });
     } catch (err) {
-      // 錯誤已在 AuthContext 中處理並設置
-      console.error(err)
+      // Error is handled by context
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50 px-4 relative overflow-hidden">
-      {/* 背景裝飾元素 */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-sky-300 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-40 left-40 w-80 h-80 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-60 animate-blob animation-delay-4000"></div>
-      </div>
-      
-      <div className="relative z-10 w-full max-w-md">
-        <form onSubmit={handleSubmit} className="bg-white/90 backdrop-blur-lg p-8 rounded-3xl shadow-2xl border border-white/30">
-          {/* Logo 或圖示 */}
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-sky-300 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
+    <div className="flex items-center justify-center min-h-screen bg-slate-50">
+      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-2xl shadow-lg">
+        <div className="text-center">
+            <div className="inline-block p-3 bg-primary/10 rounded-full mb-4">
+                <FiLogIn className="w-8 h-8 text-primary" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">歡迎回來</h2>
-            <p className="text-gray-600">請登入您的帳號</p>
+            <h2 className="text-3xl font-bold text-gray-900">
+                登入您的帳戶
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+                歡迎回來！請輸入您的詳細資訊。
+            </p>
+        </div>
+
+        {authError && <div className="p-3 my-4 text-sm text-red-700 bg-red-100 rounded-lg">{authError}</div>}
+
+        <form className="space-y-6" onSubmit={handleLogin}>
+          <div>
+            <div className="relative">
+                <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="appearance-none block w-full px-12 py-3 border border-gray-200 rounded-lg bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                    placeholder="電子郵件"
+                />
+            </div>
           </div>
-          
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">電子郵件</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" />
-                  </svg>
-                </div>
+
+          <div>
+            <div className="relative">
+                <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
-                  type="email"
-                  placeholder="請輸入電子郵件"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-transparent transition-all duration-200 bg-white/70 backdrop-blur-sm"
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="appearance-none block w-full px-12 py-3 border border-gray-200 rounded-lg bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                    placeholder="密碼"
                 />
-              </div>
             </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">密碼</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <input
-                  type="password"
-                  placeholder="請輸入密碼"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  required
-                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-transparent transition-all duration-200 bg-white/70 backdrop-blur-sm"
-                />
-              </div>
-            </div>
-            
-            {authError && (
-              <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center space-x-2">
-                <svg className="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span className="text-red-700 font-medium">{authError}</span>
-              </div>
-            )}
-            
+          </div>
+
+          <div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-sky-300 text-white rounded-xl font-semibold hover:bg-sky-400 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:bg-primary/40"
             >
               {loading ? '登入中...' : '登入'}
             </button>
           </div>
-          
-          <div className="mt-8 text-center">
-            <p className="text-gray-600">
-              還沒有帳號？{' '}
-              <Link to="/register" className="text-sky-600 hover:text-sky-700 font-semibold hover:underline transition-colors duration-200">
-                立即註冊
-              </Link>
-            </p>
-          </div>
         </form>
+
+        <p className="text-sm text-center text-gray-600">
+            還沒有帳戶？{' '}
+            <Link to="/register" className="font-medium text-primary hover:text-primary/80">
+                立即註冊
+            </Link>
+        </p>
       </div>
     </div>
   )

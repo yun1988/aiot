@@ -7,7 +7,11 @@ const config: Config = {
     './src/**/*.{js,ts,jsx,tsx}'
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: '#0D98BA',
+      }
+    },
   },
   plugins: [],
 }

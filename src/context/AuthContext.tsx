@@ -5,6 +5,7 @@ const API_URL = 'http://localhost:3001'
 
 interface User {
   id: number
+  name: string
   email: string
 }
 
@@ -12,7 +13,7 @@ interface AuthContextType {
   user: User | null
   login: (email: string, password: string) => Promise<void>
   logout: () => void
-  register: (email: string, password: string) => Promise<void>
+  register: (name: string, email: string, password: string) => Promise<void>
   loading: boolean
   error: string | null
 }
@@ -65,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('user')
   }
 
-  const register = async (email: string, password: string) => {
+  const register = async (name: string, email: string, password: string) => {
     setError(null)
     setLoading(true)
     try {
@@ -74,7 +75,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error('此電子郵件已被註冊')
       }
 
-      const response = await axios.post(`${API_URL}/users`, { email, password })
+      const response = await axios.post(`${API_URL}/users`, { name, email, password })
       handleAuthSuccess(response.data)
     } catch (err: any) {
       setError(err.message || '註冊時發生錯誤')

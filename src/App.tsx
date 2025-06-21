@@ -1,13 +1,24 @@
 import React from 'react'
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Home from './pages/Home'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import DashboardLayout from './components/DashboardLayout'
 
-function PrivateRoute({ children }: { children: JSX.Element }) {
-  const { user } = useAuth()
-  return user ? children : <Navigate to="/login" replace />
+const PrivateRoute = ({ children }: { children: React.ReactElement }) => {
+  const { user, loading } = useAuth()
+  const location = useLocation()
+
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>
+  }
+
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />
+  }
+
+  return <DashboardLayout>{children}</DashboardLayout>
 }
 
 export default function App() {
