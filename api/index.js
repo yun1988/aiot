@@ -25,8 +25,8 @@ module.exports = (req, res) => {
     return;
   }
 
-  const { url, method } = req;
-  const urlParts = url.split('/').filter(part => part);
+  const { url, method, query } = req;
+  const urlParts = url.split('?')[0].split('/').filter(part => part);
   
   // 移除 'api' 前綴
   if (urlParts[0] === 'api') {
@@ -56,7 +56,18 @@ module.exports = (req, res) => {
           res.status(404).json({ error: 'Item not found' });
         }
       } else {
-        res.status(200).json(db[resource]);
+        let results = db[resource];
+        
+        // 處理查詢參數過濾
+        if (query) {
+          results = results.filter(item => {
+            return Object.keys(query).every(key => {
+              return item[key] && item[key].toString() === query[key].toString();
+            });
+          });
+        }
+        
+        res.status(200).json(results);
       }
       break;
 
@@ -68,7 +79,7 @@ module.exports = (req, res) => {
       req.on('end', () => {
         try {
           const newItem = JSON.parse(body);
-          newItem.id = Date.now(); // 簡單的 ID 生成
+          newItem.id = Date.now().toString(); // 字符串 ID
           db[resource].push(newItem);
           res.status(201).json(newItem);
         } catch (error) {
@@ -91,7 +102,7 @@ module.exports = (req, res) => {
           const updatedItem = JSON.parse(putBody);
           const index = db[resource].findIndex(item => item.id == id);
           if (index !== -1) {
-            db[resource][index] = { ...updatedItem, id: parseInt(id) };
+            db[resource][index] = { ...updatedItem, id: id };
             res.status(200).json(db[resource][index]);
           } else {
             res.status(404).json({ error: 'Item not found' });
