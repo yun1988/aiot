@@ -1,11 +1,11 @@
 import React from 'react'
 import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Home from './pages/Home'
-import Room from './pages/Room'
-import { AuthProvider, useAuth } from './context/AuthContext'
-import DashboardLayout from './components/DashboardLayout'
+import Login from 'pages/Login'
+import Register from 'pages/Register'
+import Home from 'pages/Home'
+import Room from 'pages/Room'
+import { AuthProvider, useAuth } from 'context/AuthContext'
+import DashboardLayout from 'components/layout/DashboardLayout'
 
 const PrivateRoute = ({ children }: { children: React.ReactElement }) => {
   const { user, loading } = useAuth()

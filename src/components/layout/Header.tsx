@@ -1,6 +1,6 @@
 import React from 'react';
 import { FiMenu, FiBell, FiChevronDown, FiUser } from 'react-icons/fi';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from 'context/AuthContext';
 
 interface HeaderProps {
   toggleSidebar: () => void;

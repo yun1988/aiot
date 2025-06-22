@@ -14,7 +14,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+
+    "baseUrl": "src",        // 加這行，讓編譯器知道根目錄是 src
+    "paths": {
+      "context/*": ["context/*"],
+      "components/*": ["components/*"],
+      "pages/*": ["pages/*"]
+    }
   },
   "include": ["src"]
 }

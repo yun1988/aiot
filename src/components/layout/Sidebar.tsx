@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { 
   RiDashboardLine, RiPieChartLine, RiComputerLine, RiSettings3Line, RiBarChartLine, RiInformationLine, RiLogoutBoxRLine, RiMenuFoldLine, RiMenuUnfoldLine, RiFlashlightFill 
 } from 'react-icons/ri';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from 'context/AuthContext';
 
 interface SidebarProps {
   isSidebarOpen: boolean;
