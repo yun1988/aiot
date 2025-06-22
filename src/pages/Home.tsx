@@ -118,7 +118,13 @@ const WeatherCard = () => (
 // Overall Stats Component
 const OverallStats = () => (
   <div className="bg-white p-6 rounded-2xl shadow-sm min-h-[200px]">
-    <h3 className="font-bold text-lg text-gray-800 mb-4">系統總覽</h3>
+    <div className="flex justify-between items-center mb-4">
+      <h3 className="font-bold text-lg text-gray-800">系統總覽</h3>
+      <div className="text-right">
+        <p className="text-lg font-bold text-gray-800">6</p>
+        <p className="text-xs text-gray-600">今日執行任務</p>
+      </div>
+    </div>
     <div className="grid grid-cols-3 gap-4">
       <div className="text-center">
         <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
@@ -140,12 +146,6 @@ const OverallStats = () => (
         </div>
         <p className="text-2xl font-bold text-gray-800">3</p>
         <p className="text-xs text-gray-600">網關</p>
-      </div>
-    </div>
-    <div className="mt-4 pt-4 border-t border-gray-100">
-      <div className="flex justify-between items-center">
-        <span className="text-sm text-gray-600">今日執行任務</span>
-        <span className="text-lg font-bold text-gray-800">6</span>
       </div>
     </div>
   </div>
@@ -198,8 +198,11 @@ const QuickControls = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm">
-      <h3 className="font-bold text-lg text-gray-800 mb-4">快速控制場景</h3>
+    <div className="bg-white p-6 rounded-2xl shadow-sm h-[420px] flex flex-col">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="font-bold text-lg text-gray-800">快速控制場景</h3>
+        <a href="#" className="text-sm text-primary font-medium">更多場景</a>
+      </div>
       <div className="space-y-3">
         {quickDevices.map(device => {
           const isOn = deviceStates[device.name];
@@ -244,12 +247,7 @@ const QuickControls = () => {
           );
         })}
       </div>
-      
-      <div className="mt-4 pt-4 border-t border-gray-100">
-        <p className="text-xs text-gray-500 text-center">
-          紅色為主控開關，紫色為場景模式
-        </p>
-      </div>
+
     </div>
   );
 };
@@ -264,7 +262,7 @@ const ConnectedStandalone = () => {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm">
+    <div className="bg-white p-6 rounded-2xl shadow-sm h-[480px] flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-bold text-lg text-gray-800">獨立連接設備</h3>
         <a href="#" className="text-sm text-primary font-medium">查看全部</a>
@@ -338,7 +336,7 @@ const ConnectedHubs = () => {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm h-[390px] flex flex-col">
+    <div className="bg-white p-6 rounded-2xl shadow-sm h-[480px] flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-bold text-lg text-gray-800">智能網關</h3>
         <a href="#" className="text-sm text-primary font-medium">查看全部</a>
@@ -400,13 +398,18 @@ const Rooms = () => {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm">
+    <div className="bg-white p-6 rounded-2xl shadow-sm h-[420px] flex flex-col">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-bold text-lg text-gray-800">房間</h3>
+        <div className="flex items-center space-x-3">
+          <h3 className="font-bold text-lg text-gray-800">房間</h3>
+          <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+            {rooms.length} 間
+          </span>
+        </div>
         <a href="#" className="text-sm text-primary font-medium">查看全部</a>
       </div>
       
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 flex-1">
         {rooms.map((room, index) => {
           const Icon = room.icon;
           const isSelected = selectedRoom === index;
@@ -414,15 +417,15 @@ const Rooms = () => {
             <div 
               key={room.name} 
               onClick={() => setSelectedRoom(index)}
-              className={`p-4 rounded-xl cursor-pointer transition-all ${
+              className={`p-3 rounded-xl cursor-pointer transition-all ${
                 isSelected ? 'bg-primary/10 border-2 border-primary' : 'bg-slate-50 hover:bg-slate-100'
               }`}
             >
               <div className="flex flex-col items-center text-center">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 ${
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
                   isSelected ? 'bg-primary text-white' : 'bg-gray-200 text-gray-600'
                 }`}>
-                  <Icon className="h-6 w-6" />
+                  <Icon className="h-5 w-5" />
                 </div>
                 <p className={`font-semibold text-sm mb-1 ${
                   isSelected ? 'text-primary' : 'text-gray-800'
@@ -449,13 +452,7 @@ const Rooms = () => {
           );
         })}
       </div>
-      
-      <div className="mt-4 pt-4 border-t border-gray-100">
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-600">總房間數</span>
-          <span className="font-semibold text-gray-800">{rooms.length} 間</span>
-        </div>
-      </div>
+
     </div>
   );
 };
@@ -516,10 +513,22 @@ const AutomationStats = () => {
     console.log(`執行場景: ${sceneName}`);
   };
 
+  // 找到當前啟動的場景
+  const currentActiveScene = scenes.find(scene => scene.isActive);
+  const ActiveIcon = currentActiveScene?.icon;
+
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm">
+    <div className="bg-white p-6 rounded-2xl shadow-sm h-[420px] flex flex-col">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-bold text-lg text-gray-800">智能場景控制</h3>
+        <div className="flex items-center space-x-3">
+          <h3 className="font-bold text-lg text-gray-800">智能場景控制</h3>
+          {currentActiveScene && (
+            <div className="flex items-center space-x-1 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+              {ActiveIcon && <ActiveIcon className="h-3 w-3" />}
+              <span>{currentActiveScene.name}</span>
+            </div>
+          )}
+        </div>
         <a href="#" className="text-sm text-primary font-medium">查看全部</a>
       </div>
       
@@ -576,11 +585,97 @@ const AutomationStats = () => {
         })}
       </div>
 
-      {/* 底部提示 */}
-      <div className="mt-4 pt-4 border-t border-gray-100">
-        <p className="text-xs text-gray-500 text-center">
-          {activeScene ? `${activeScene} 已啟動` : '點擊切換場景模式'}
-        </p>
+
+    </div>
+  );
+};
+
+// Auto Schedules Component
+const AutoSchedules = () => {
+  const schedules = [
+    {
+      id: 1,
+      name: '早晨喚醒',
+      time: '07:00',
+      days: ['一', '二', '三', '四', '五'],
+      actions: ['開啟臥室燈光', '調整溫度至24°C'],
+      status: 'active',
+      nextRun: '明天 07:00'
+    },
+    {
+      id: 2,
+      name: '離家模式',
+      time: '08:30',
+      days: ['一', '二', '三', '四', '五'],
+      actions: ['關閉所有燈光', '啟動安全模式'],
+      status: 'active',
+      nextRun: '明天 08:30'
+    },
+    {
+      id: 3,
+      name: '回家準備',
+      time: '18:00',
+      days: ['一', '二', '三', '四', '五', '六', '日'],
+      actions: ['開啟客廳燈光', '預熱空調'],
+      status: 'active',
+      nextRun: '今天 18:00'
+    },
+    {
+      id: 4,
+      name: '睡前關燈',
+      time: '23:00',
+      days: ['一', '二', '三', '四', '五', '六', '日'],
+      actions: ['關閉所有燈光', '鎖定門鎖'],
+      status: 'paused',
+      nextRun: '已暫停'
+    }
+  ];
+
+  return (
+    <div className="bg-white p-6 rounded-2xl shadow-sm">
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex items-center space-x-2">
+          <h3 className="font-bold text-lg text-gray-800">自動排程</h3>
+          <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full font-medium">
+            {schedules.filter(s => s.status === 'active').length} 個啟用
+          </span>
+        </div>
+        <a href="#" className="text-sm text-primary font-medium">管理排程</a>
+      </div>
+      <div className="space-y-3">
+        {schedules.map((schedule) => (
+          <div key={schedule.id} className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-2">
+                <FiClock className="h-4 w-4 text-gray-600" />
+                <span className="font-medium text-gray-800">{schedule.name}</span>
+                <span className={`w-2 h-2 rounded-full ${
+                  schedule.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
+                }`}></span>
+              </div>
+              <span className="text-sm font-mono text-gray-600">{schedule.time}</span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center space-x-2">
+                <div className="flex space-x-1">
+                  {schedule.days.map((day, index) => (
+                    <span key={index} className="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-xs">
+                      {day}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <span className={`${
+                schedule.status === 'active' ? 'text-green-600' : 'text-gray-500'
+              }`}>
+                {schedule.nextRun}
+              </span>
+            </div>
+            <div className="mt-2 text-xs text-gray-600">
+              {schedule.actions.join(' • ')}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -589,10 +684,60 @@ const AutomationStats = () => {
 // Recent Activities Component
 const RecentActivities = () => {
   const activities = [
-    { type: 'alert', message: '偵測到動態', time: '剛剛', icon: FiAlertCircle, color: 'text-red-500' },
-    { type: 'success', message: '自動化執行完成', time: '溫度調整至22°C', icon: FiCheckCircle, color: 'text-green-500' },
-    { type: 'info', message: '新用戶邀請', time: 'wendy@example.com', icon: FiUsers, color: 'text-blue-500' },
-    { type: 'warning', message: '設備離線', time: '客廳感測器', icon: FiWifi, color: 'text-orange-500' },
+    { 
+      type: 'alert', 
+      message: '偵測到動態', 
+      detail: '客廳動作感測器觸發', 
+      time: '剛剛', 
+      location: '客廳',
+      icon: FiAlertCircle, 
+      color: 'text-red-500' 
+    },
+    { 
+      type: 'success', 
+      message: '自動化執行完成', 
+      detail: '睡眠模式已啟動，溫度調整至22°C', 
+      time: '5分鐘前', 
+      location: '臥室',
+      icon: FiCheckCircle, 
+      color: 'text-green-500' 
+    },
+    { 
+      type: 'info', 
+      message: '新用戶邀請', 
+      detail: 'wendy@example.com 已加入家庭群組', 
+      time: '10分鐘前', 
+      location: '系統',
+      icon: FiUsers, 
+      color: 'text-blue-500' 
+    },
+    { 
+      type: 'warning', 
+      message: '設備離線', 
+      detail: '溫濕度感測器連線中斷', 
+      time: '15分鐘前', 
+      location: '客廳',
+      icon: FiWifi, 
+      color: 'text-orange-500' 
+    },
+    { 
+      type: 'success', 
+      message: '場景切換', 
+      detail: '已切換至回家模式，開啟6個設備', 
+      time: '30分鐘前', 
+      location: '全屋',
+      icon: FiHome, 
+      color: 'text-green-500' 
+    },
+    { 
+      type: 'info', 
+      message: '定時任務執行', 
+      detail: '自動關閉所有燈光和電器', 
+      time: '1小時前', 
+      location: '全屋',
+      icon: FiClock, 
+      color: 'text-blue-500' 
+    },
   ];
 
   return (
@@ -605,17 +750,23 @@ const RecentActivities = () => {
         {activities.map((activity, index) => {
           const Icon = activity.icon;
           return (
-            <div key={index} className="flex items-center space-x-3 p-3 hover:bg-gray-50 rounded-xl">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+            <div key={index} className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-xl transition-colors">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                 activity.type === 'alert' ? 'bg-red-100' : 
                 activity.type === 'success' ? 'bg-green-100' : 
                 activity.type === 'warning' ? 'bg-orange-100' : 'bg-blue-100'
               }`}>
                 <Icon className={`h-4 w-4 ${activity.color}`} />
               </div>
-              <div className="flex-1">
-                <p className="font-medium text-gray-800 text-sm">{activity.message}</p>
-                <p className="text-xs text-gray-500">{activity.time}</p>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between">
+                  <p className="font-medium text-gray-800 text-sm">{activity.message}</p>
+                  <div className="flex items-center space-x-2 text-xs text-gray-500">
+                    <span className="bg-gray-100 px-2 py-1 rounded-full">{activity.location}</span>
+                    <span>{activity.time}</span>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">{activity.detail}</p>
               </div>
             </div>
           );
@@ -640,27 +791,36 @@ const Home = () => {
           
           {/* 3. Rooms */}
           <Rooms />
+          
+          {/* 4. Auto Schedules */}
+          <AutoSchedules />
         </div>
 
-        {/* Middle Column - 4 blocks */}
-        <div className="lg:col-span-4 space-y-6">
-          {/* 4. Connected Standalone Devices (上方) */}
-          <ConnectedStandalone />
-          
-          {/* 5. Quick Controls */}
-          <QuickControls />
-        </div>
+        {/* Middle and Right Columns */}
+        <div className="lg:col-span-8 space-y-6">
+          {/* Top Row - Quick Controls and Automation Stats */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Middle Column Top */}
+            <div className="space-y-6">
+              {/* 4. Connected Standalone Devices */}
+              <ConnectedStandalone />
+              
+              {/* 5. Quick Controls */}
+              <QuickControls />
+            </div>
 
-        {/* Right Column - 4 blocks */}
-        <div className="lg:col-span-4 space-y-6">
-          {/* 6. Connected Hubs */}
-          <ConnectedHubs />
-          
-          {/* 7. Recent Activities */}
+            {/* Right Column Top */}
+            <div className="space-y-6">
+              {/* 6. Connected Hubs */}
+              <ConnectedHubs />
+              
+              {/* 7. Automation Stats */}
+              <AutomationStats />
+            </div>
+          </div>
+
+          {/* 8. Recent Activities - 橫跨整個寬度 */}
           <RecentActivities />
-          
-          {/* 8. Automation Stats + Scene Shortcuts */}
-          <AutomationStats />
         </div>
       </div>
     </div>
