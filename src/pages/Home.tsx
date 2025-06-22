@@ -280,7 +280,7 @@ const ConnectedStandalone = () => {
                            device.color === 'blue' ? 'bg-blue-100 text-blue-600' :
                            'bg-orange-100 text-orange-600';
           return (
-            <div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl hover:bg-slate-100 cursor-pointer">
+            <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-slate-100 cursor-pointer">
               <div className="flex items-center space-x-3">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${colorClass}`}>
                   <Icon className="h-5 w-5" />
@@ -383,12 +383,7 @@ const ConnectedHubs = () => {
         })}
       </div>
       
-      <div className="mt-4 pt-4 border-t border-gray-100">
-        <div className="flex justify-between text-sm text-gray-600">
-          <span>總連接設備</span>
-          <span className="font-semibold">14 個</span>
-        </div>
-      </div>
+
     </div>
   );
 };
