@@ -264,7 +264,7 @@ const ConnectedStandalone = () => {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm">
+    <div className="bg-white p-6 rounded-2xl shadow-sm min-h-[400px] flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-bold text-lg text-gray-800">獨立連接設備</h3>
         <a href="#" className="text-sm text-primary font-medium">查看全部</a>
@@ -273,7 +273,7 @@ const ConnectedStandalone = () => {
         <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
         <input type="text" placeholder="搜尋設備..." className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-100 focus:outline-none"/>
       </div>
-      <div className="space-y-3">
+      <div className="space-y-3 flex-1">
         {standaloneDevices.map((device, index) => {
           const Icon = device.icon;
           const colorClass = device.color === 'green' ? 'bg-green-100 text-green-600' :
@@ -347,7 +347,7 @@ const ConnectedHubs = () => {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm">
+    <div className="bg-white p-6 rounded-2xl shadow-sm min-h-[400px] flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-bold text-lg text-gray-800">智能網關</h3>
         <a href="#" className="text-sm text-primary font-medium">查看全部</a>
@@ -357,7 +357,7 @@ const ConnectedHubs = () => {
         <input type="text" placeholder="搜尋網關..." className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-100 focus:outline-none"/>
       </div>
       
-      <div className="space-y-3">
+      <div className="space-y-3 flex-1">
         {hubDevices.map((hub, index) => {
           const Icon = hub.icon;
           return (
@@ -661,14 +661,14 @@ const Home = () => {
           {/* 4. Connected Standalone Devices (上方) */}
           <ConnectedStandalone />
           
-          {/* 5. Connected Hubs (下方) */}
-          <ConnectedHubs />
+          {/* 5. Quick Controls */}
+          <QuickControls />
         </div>
 
         {/* Right Column - 4 blocks */}
         <div className="lg:col-span-4 space-y-6">
-          {/* 6. Quick Controls */}
-          <QuickControls />
+          {/* 6. Connected Hubs */}
+          <ConnectedHubs />
           
           {/* 7. Recent Activities */}
           <RecentActivities />
