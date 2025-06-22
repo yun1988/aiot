@@ -89,7 +89,7 @@ const TemperatureTrackerCard: React.FC<TemperatureTrackerCardProps> = ({ name, i
 
 // Weather Card Component
 const WeatherCard = () => (
-  <div className="bg-gradient-to-br from-cyan-500 to-blue-600 p-6 rounded-2xl text-white shadow-lg">
+  <div className="bg-gradient-to-br from-cyan-500 to-blue-600 p-6 rounded-2xl text-white shadow-lg min-h-[280px] flex flex-col justify-between">
     <div className="flex justify-between items-start mb-4">
       <div>
         <p className="font-bold text-lg">週一</p>
@@ -117,7 +117,7 @@ const WeatherCard = () => (
 
 // Overall Stats Component
 const OverallStats = () => (
-  <div className="bg-white p-6 rounded-2xl shadow-sm">
+  <div className="bg-white p-6 rounded-2xl shadow-sm min-h-[200px]">
     <h3 className="font-bold text-lg text-gray-800 mb-4">系統總覽</h3>
     <div className="grid grid-cols-3 gap-4">
       <div className="text-center">
@@ -642,22 +642,22 @@ const RecentActivities = () => {
 const Home = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      {/* 8 Block Layout */}
+      {/* 8 Block Layout - 重新排列讓高度更平衡 */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column - 3 blocks */}
-        <div className="lg:col-span-3 space-y-6">
+        {/* Left Column - 4 blocks */}
+        <div className="lg:col-span-4 space-y-6">
           {/* 1. Weather */}
           <WeatherCard />
           
           {/* 2. Overall Stats */}
           <OverallStats />
           
-          {/* 3. Quick Controls */}
-          <QuickControls />
+          {/* 3. Rooms */}
+          <Rooms />
         </div>
 
-        {/* Middle Column - 2 blocks (重新排序) */}
-        <div className="lg:col-span-5 space-y-6">
+        {/* Middle Column - 4 blocks */}
+        <div className="lg:col-span-4 space-y-6">
           {/* 4. Connected Standalone Devices (上方) */}
           <ConnectedStandalone />
           
@@ -665,15 +665,15 @@ const Home = () => {
           <ConnectedHubs />
         </div>
 
-        {/* Right Column - 3 blocks */}
+        {/* Right Column - 4 blocks */}
         <div className="lg:col-span-4 space-y-6">
-          {/* 6. Rooms (最上方) */}
-          <Rooms />
+          {/* 6. Quick Controls */}
+          <QuickControls />
           
-          {/* 7. Recent Activities (居中) */}
+          {/* 7. Recent Activities */}
           <RecentActivities />
           
-          {/* 8. Automation Stats + Scene Shortcuts (最下方) */}
+          {/* 8. Automation Stats + Scene Shortcuts */}
           <AutomationStats />
         </div>
       </div>
