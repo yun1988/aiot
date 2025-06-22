@@ -23,5 +23,8 @@
     "api/index.js": {
       "maxDuration": 10
     }
+  },
+  "env": {
+    "VERCEL": "1"
   }
 } 
