@@ -124,7 +124,7 @@ const OverallStats = () => (
         <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
           <RiDeviceLine className="h-6 w-6 text-blue-600" />
         </div>
-        <p className="text-2xl font-bold text-gray-800">22</p>
+        <p className="text-2xl font-bold text-gray-800">18</p>
         <p className="text-xs text-gray-600">設備</p>
       </div>
       <div className="text-center">
@@ -138,7 +138,7 @@ const OverallStats = () => (
         <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2">
           <MdOutlineDeviceHub className="h-6 w-6 text-orange-600" />
         </div>
-        <p className="text-2xl font-bold text-gray-800">4</p>
+        <p className="text-2xl font-bold text-gray-800">3</p>
         <p className="text-xs text-gray-600">網關</p>
       </div>
     </div>
@@ -335,15 +335,6 @@ const ConnectedHubs = () => {
       protocol: 'Zigbee Light',
       uptime: '15天 2小時'
     },
-    { 
-      name: 'Mi Gateway 3', 
-      brand: 'Xiaomi', 
-      status: '4個感測器', 
-      version: 'v1.5.8', 
-      icon: MdOutlineDeviceHub,
-      protocol: 'Zigbee/BLE',
-      uptime: '2天 12小時'
-    },
   ];
 
   return (
@@ -395,7 +386,7 @@ const ConnectedHubs = () => {
       <div className="mt-4 pt-4 border-t border-gray-100">
         <div className="flex justify-between text-sm text-gray-600">
           <span>總連接設備</span>
-          <span className="font-semibold">18 個</span>
+          <span className="font-semibold">14 個</span>
         </div>
       </div>
     </div>
@@ -548,7 +539,7 @@ const AutomationStats = () => {
           <p className="text-xs text-blue-600">啟動中</p>
         </div>
         <div className="text-center p-2 bg-purple-50 rounded-lg">
-          <p className="text-lg font-bold text-purple-600">22</p>
+          <p className="text-lg font-bold text-purple-600">18</p>
           <p className="text-xs text-purple-600">控制設備</p>
         </div>
       </div>
