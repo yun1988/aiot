@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IconType } from 'react-icons';
 import { 
   FiCloud, FiWind, FiCpu, FiUsers, FiHardDrive, FiSun, FiThermometer, FiZap, FiPlus, 
   FiSearch, FiWifi, FiBattery, FiMoreVertical, FiChevronRight, FiChevronLeft, FiMapPin,
-  FiHome, FiActivity, FiSettings, FiAlertCircle, FiCheckCircle, FiClock, FiShield
+  FiHome, FiActivity, FiSettings, FiAlertCircle, FiCheckCircle, FiClock, FiShield, FiBookOpen,
+  FiLock, FiCamera, FiMoon
 } from 'react-icons/fi';
+import { IoBedOutline } from 'react-icons/io5';
+import { MdOutlineKitchen } from 'react-icons/md';
 import { BsDropletFill, BsSnow, BsCloudSun } from 'react-icons/bs';
 import { FaTemperatureHigh, FaTemperatureLow } from 'react-icons/fa';
-import { RiInputMethodLine, RiFlowChart, RiDeviceLine } from 'react-icons/ri';
+import { RiInputMethodLine, RiFlowChart, RiDeviceLine, RiCalendarScheduleLine } from 'react-icons/ri';
 import { MdOutlineDeviceHub } from 'react-icons/md';
 
 interface StatCardProps {
@@ -87,69 +90,140 @@ const TemperatureTrackerCard: React.FC<TemperatureTrackerCardProps> = ({ name, i
   </div>
 );
 
+// Counter Animation Hook
+const useCountUp = (end: number, duration: number = 2000) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let startTime: number;
+    let animationId: number;
+
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+      
+      setCount(Math.floor(progress * end));
+
+      if (progress < 1) {
+        animationId = requestAnimationFrame(animate);
+      }
+    };
+
+    animationId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationId);
+  }, [end, duration]);
+
+  return count;
+};
+
 // Weather Card Component
-const WeatherCard = () => (
-  <div className="bg-gradient-to-br from-cyan-500 to-blue-600 p-6 rounded-2xl text-white shadow-lg min-h-[280px] flex flex-col justify-between">
-    <div className="flex justify-between items-start mb-4">
-      <div>
-        <p className="font-bold text-lg">週一</p>
-        <p className="text-sm opacity-80">2024年7月22日</p>
+const WeatherCard = () => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+
+  return (
+    <div 
+      className="bg-gradient-to-br from-cyan-500 to-blue-600 p-6 rounded-2xl text-white shadow-lg min-h-[280px] flex flex-col justify-between cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={() => setShowDetails(!showDetails)}
+    >
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <p className="font-bold text-lg">週一</p>
+          <p className="text-sm opacity-80">2024年7月22日</p>
+        </div>
+        <div className={`transform transition-transform duration-300 ${isHovered ? 'rotate-12' : ''}`}>
+          <FiSettings className="h-5 w-5 opacity-70" />
+        </div>
+      </div>
+      
+      <div className="text-center my-6">
+        <div className={`transform transition-all duration-500 ${isHovered ? 'scale-110 rotate-12' : ''}`}>
+          <BsCloudSun className="h-16 w-16 text-white/80 mx-auto mb-2" />
+        </div>
+        <p className="text-3xl font-bold">32°C</p>
+        <div className="flex items-center justify-center space-x-1 mt-2">
+          <FiMapPin className="h-4 w-4" />
+          <p className="font-medium text-sm">台北市</p>
+        </div>
+      </div>
+
+      {showDetails && (
+        <div className="mb-4 space-y-2 animate-fade-in">
+          <div className="flex justify-between text-xs opacity-90">
+            <span>體感溫度</span>
+            <span>35°C</span>
+          </div>
+          <div className="flex justify-between text-xs opacity-90">
+            <span>紫外線指數</span>
+            <span>中等</span>
+          </div>
+          <div className="flex justify-between text-xs opacity-90">
+            <span>能見度</span>
+            <span>10km</span>
+          </div>
+        </div>
+      )}
+      
+      <div className="flex justify-between text-sm">
+        <div className="flex items-center space-x-2">
+          <BsDropletFill className={`transform transition-transform duration-300 ${isHovered ? 'scale-125' : ''}`} />
+          <span>48% 濕度</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <FiWind className={`transform transition-transform duration-300 ${isHovered ? 'scale-125' : ''}`} />
+          <span>11.02 風速</span>
+        </div>
       </div>
     </div>
-    <div className="text-center my-6">
-      <BsCloudSun className="h-16 w-16 text-white/80 mx-auto mb-2" />
-      <p className="text-3xl font-bold">32°C</p>
-      <div className="flex items-center justify-center space-x-1 mt-2">
-        <FiMapPin className="h-4 w-4" />
-        <p className="font-medium text-sm">台北市</p>
-      </div>
-    </div>
-    <div className="flex justify-between text-sm">
-      <div className="flex items-center space-x-2">
-        <BsDropletFill /> <span>48% 濕度</span>
-      </div>
-      <div className="flex items-center space-x-2">
-        <FiWind /> <span>11.02 風速</span>
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 // Overall Stats Component
-const OverallStats = () => (
-  <div className="bg-white p-6 rounded-2xl shadow-sm min-h-[200px]">
-    <div className="flex justify-between items-center mb-4">
-      <h3 className="font-bold text-lg text-gray-800">系統總覽</h3>
-      <div className="text-right">
-        <p className="text-lg font-bold text-gray-800">6</p>
-        <p className="text-xs text-gray-600">今日執行任務</p>
+const OverallStats = () => {
+  const deviceCount = useCountUp(18, 1500);
+  const scheduleCount = useCountUp(8, 1800);
+  const gatewayCount = useCountUp(3, 1200);
+  const executedCount = useCountUp(6, 2000);
+
+  return (
+    <div className="bg-white p-6 rounded-2xl shadow-sm min-h-[200px]">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="font-bold text-lg text-gray-800">系統總覽</h3>
+        <div className="flex items-center space-x-2 bg-cyan-50 px-3 py-2 rounded-lg">
+          <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center">
+            <FiCheckCircle className="h-4 w-4 text-white" />
+          </div>
+          <p className="text-sm font-medium text-cyan-700">本日已執行 <span className="text-lg font-bold text-cyan-800">{executedCount}</span></p>
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div className="text-center group cursor-pointer">
+          <div className="w-12 h-12 bg-cyan-100 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform duration-300">
+            <RiDeviceLine className="h-6 w-6 text-cyan-600" />
+          </div>
+          <p className="text-2xl font-bold text-gray-800">{deviceCount}</p>
+          <p className="text-xs text-gray-600">設備</p>
+        </div>
+        <div className="text-center group cursor-pointer">
+          <div className="w-12 h-12 bg-cyan-100 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform duration-300">
+            <RiCalendarScheduleLine className="h-6 w-6 text-cyan-600" />
+          </div>
+          <p className="text-2xl font-bold text-gray-800">{scheduleCount}</p>
+          <p className="text-xs text-gray-600">排程</p>
+        </div>
+        <div className="text-center group cursor-pointer">
+          <div className="w-12 h-12 bg-cyan-100 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform duration-300">
+            <MdOutlineDeviceHub className="h-6 w-6 text-cyan-600" />
+          </div>
+          <p className="text-2xl font-bold text-gray-800">{gatewayCount}</p>
+          <p className="text-xs text-gray-600">網關</p>
+        </div>
       </div>
     </div>
-    <div className="grid grid-cols-3 gap-4">
-      <div className="text-center">
-        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
-          <RiDeviceLine className="h-6 w-6 text-blue-600" />
-        </div>
-        <p className="text-2xl font-bold text-gray-800">18</p>
-        <p className="text-xs text-gray-600">設備</p>
-      </div>
-      <div className="text-center">
-        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-          <RiFlowChart className="h-6 w-6 text-green-600" />
-        </div>
-        <p className="text-2xl font-bold text-gray-800">8</p>
-        <p className="text-xs text-gray-600">排程</p>
-      </div>
-      <div className="text-center">
-        <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2">
-          <MdOutlineDeviceHub className="h-6 w-6 text-orange-600" />
-        </div>
-        <p className="text-2xl font-bold text-gray-800">3</p>
-        <p className="text-xs text-gray-600">網關</p>
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 // Quick Controls Component
 const QuickControls = () => {
@@ -163,8 +237,8 @@ const QuickControls = () => {
   const quickDevices = [
     { name: '全部燈光', icon: FiSun, status: '開啟', type: 'master' },
     { name: '全部電源', icon: FiZap, status: '開啟', type: 'master' },
-    { name: '離家模式', icon: FiMapPin, status: '關閉', type: 'scene' },
-    { name: '睡眠模式', icon: FiClock, status: '關閉', type: 'scene' },
+    { name: '離家模式', icon: FiShield, status: '關閉', type: 'scene' },
+    { name: '睡眠模式', icon: FiMoon, status: '關閉', type: 'scene' },
   ];
 
   const handleToggle = (deviceName: string) => {
@@ -203,29 +277,29 @@ const QuickControls = () => {
         <h3 className="font-bold text-lg text-gray-800">快速控制場景</h3>
         <a href="#" className="text-sm text-primary font-medium">更多場景</a>
       </div>
-      <div className="space-y-3">
-        {quickDevices.map(device => {
+      <div className="space-y-5 flex-1 overflow-y-auto">
+        {quickDevices.slice(0, 4).map(device => {
           const isOn = deviceStates[device.name];
           const Icon = device.icon;
           const isMasterControl = device.type === 'master';
           const isScene = device.type === 'scene';
           
           return (
-            <div key={device.name} className={`flex items-center justify-between p-3 rounded-xl ${
-              isMasterControl ? 'bg-red-50 border border-red-100' : 
-              isScene ? 'bg-purple-50 border border-purple-100' : 'bg-gray-50'
+            <div key={device.name} className={`flex items-center justify-between p-3 rounded-xl group ${
+              isMasterControl ? 'bg-cyan-50 border border-cyan-100' : 
+              isScene ? 'bg-cyan-50 border border-cyan-100' : 'bg-gray-50'
             }`}>
               <div className="flex items-center space-x-3">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  isOn ? (isMasterControl ? 'bg-red-500 text-white' : 
-                         isScene ? 'bg-purple-500 text-white' : 'bg-primary text-white') : 'bg-gray-300 text-gray-600'
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${
+                  isOn ? (isMasterControl ? 'bg-cyan-500 text-white' : 
+                         isScene ? 'bg-cyan-500 text-white' : 'bg-primary text-white') : 'bg-gray-300 text-gray-600'
                 }`}>
                   <Icon className="h-4 w-4" />
                 </div>
                 <div>
                   <p className={`font-medium ${
-                    isMasterControl ? 'text-red-700' : 
-                    isScene ? 'text-purple-700' : 'text-gray-800'
+                    isMasterControl ? 'text-cyan-700' : 
+                    isScene ? 'text-cyan-700' : 'text-gray-800'
                   }`}>
                     {device.name}
                   </p>
@@ -237,8 +311,8 @@ const QuickControls = () => {
         <button
                 onClick={() => handleMasterControl(device.name)}
                 className={`w-12 h-6 rounded-full p-1 flex items-center transition-colors ${
-                  isOn ? (isMasterControl ? 'bg-red-500 justify-end' : 
-                         isScene ? 'bg-purple-500 justify-end' : 'bg-primary justify-end') : 'bg-gray-200 justify-start'
+                  isOn ? (isMasterControl ? 'bg-cyan-500 justify-end' : 
+                         isScene ? 'bg-cyan-500 justify-end' : 'bg-primary justify-end') : 'bg-gray-200 justify-start'
                 }`}
               >
                 <div className="w-4 h-4 rounded-full bg-white shadow-md"></div>
@@ -255,9 +329,9 @@ const QuickControls = () => {
 // Connected Standalone Devices Component
 const ConnectedStandalone = () => {
   const standaloneDevices = [
-    { name: '智慧門鎖', status: '已鎖定', battery: '85%', icon: FiSettings, color: 'green' },
+    { name: '智慧門鎖', status: '已鎖定', battery: '85%', icon: FiLock, color: 'green' },
     { name: '煙霧偵測器', status: '正常', battery: '92%', icon: FiAlertCircle, color: 'green' },
-    { name: '智慧攝影機', status: '錄影中', battery: '78%', icon: FiActivity, color: 'blue' },
+    { name: '智慧攝影機', status: '錄影中', battery: '78%', icon: FiCamera, color: 'blue' },
     { name: '溫濕度感測器', status: '24°C 65%', battery: '88%', icon: FiThermometer, color: 'orange' },
   ];
 
@@ -274,14 +348,12 @@ const ConnectedStandalone = () => {
       <div className="space-y-3">
         {standaloneDevices.map((device, index) => {
           const Icon = device.icon;
-          const colorClass = device.color === 'green' ? 'bg-green-100 text-green-600' :
-                           device.color === 'blue' ? 'bg-blue-100 text-blue-600' :
-                           'bg-orange-100 text-orange-600';
+          const colorClass = 'bg-cyan-500 text-white';
           return (
-            <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-slate-100 cursor-pointer">
+            <div key={index} className="flex items-center justify-between p-4 bg-cyan-50 rounded-xl hover:bg-cyan-100 cursor-pointer group">
               <div className="flex items-center space-x-3">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${colorClass}`}>
-                  <Icon className="h-5 w-5" />
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${colorClass} group-hover:scale-110 transition-transform duration-300`}>
+                  <Icon className="h-4 w-4" />
                 </div>
                 <div>
                   <p className="font-semibold text-gray-700">{device.name}</p>
@@ -291,8 +363,8 @@ const ConnectedStandalone = () => {
               <div className="text-right">
                 <p className="text-sm font-medium text-gray-600">{device.battery}</p>
                 <div className="flex items-center space-x-1">
-                  <FiBattery className="h-3 w-3 text-gray-400" />
-                  <FiWifi className="h-3 w-3 text-gray-400" />
+                  <FiBattery className="h-3 w-3 text-cyan-500" />
+                  <FiWifi className="h-3 w-3 text-green-500" />
                 </div>
               </div>
             </div>
@@ -311,7 +383,7 @@ const ConnectedHubs = () => {
       brand: 'HA Core', 
       status: '6個設備', 
       version: 'v2024.7.2', 
-      icon: MdOutlineDeviceHub,
+      icon: FiHome,
       protocol: 'HTTP/MQTT',
       uptime: '7天 14小時'
     },
@@ -320,7 +392,7 @@ const ConnectedHubs = () => {
       brand: 'Smart Life', 
       status: '4個設備', 
       version: 'v3.2.1', 
-      icon: MdOutlineDeviceHub,
+      icon: FiWifi,
       protocol: 'Zigbee 3.0',
       uptime: '3天 8小時'
     },
@@ -329,7 +401,7 @@ const ConnectedHubs = () => {
       brand: 'Philips', 
       status: '4個燈具', 
       version: 'v1.56.0', 
-      icon: MdOutlineDeviceHub,
+      icon: FiZap,
       protocol: 'Zigbee Light',
       uptime: '15天 2小時'
     },
@@ -350,16 +422,16 @@ const ConnectedHubs = () => {
         {hubDevices.map((hub, index) => {
           const Icon = hub.icon;
           return (
-            <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl hover:bg-slate-100 cursor-pointer transition-colors">
+            <div key={index} className="flex items-center justify-between p-4 bg-cyan-50 rounded-xl hover:bg-cyan-100 cursor-pointer transition-colors group">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
-                  <Icon className="h-6 w-6 text-primary" />
+                <div className="w-8 h-8 bg-cyan-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <Icon className="h-4 w-4 text-white" />
                 </div>
                 <div>
                   <p className="font-semibold text-gray-700">{hub.name}</p>
                   <p className="text-xs text-gray-500">{hub.brand}</p>
                   <div className="flex items-center space-x-2 mt-1">
-                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+                    <span className="text-xs bg-cyan-100 text-cyan-700 px-2 py-0.5 rounded-full">
                       {hub.protocol}
                     </span>
                     <span className="text-xs text-gray-400">
@@ -392,24 +464,24 @@ const Rooms = () => {
   
   const rooms = [
     { name: '客廳', devices: 5, icon: FiHome, status: '3個開啟', temperature: '24°C' },
-    { name: '臥室', devices: 4, icon: FiBattery, status: '2個開啟', temperature: '22°C' },
-    { name: '廚房', devices: 3, icon: FiUsers, status: '1個開啟', temperature: '26°C' },
-    { name: '書房', devices: 2, icon: FiCpu, status: '全部關閉', temperature: '23°C' },
+    { name: '臥室', devices: 4, icon: IoBedOutline, status: '2個開啟', temperature: '22°C' },
+    { name: '廚房', devices: 3, icon: MdOutlineKitchen, status: '1個開啟', temperature: '26°C' },
+    { name: '書房', devices: 2, icon: FiBookOpen, status: '全部關閉', temperature: '23°C' },
   ];
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm h-[420px] flex flex-col">
-      <div className="flex justify-between items-center mb-4">
+    <div className="bg-white p-4 rounded-2xl shadow-sm flex flex-col">
+      <div className="flex justify-between items-center mb-3">
         <div className="flex items-center space-x-3">
           <h3 className="font-bold text-lg text-gray-800">房間</h3>
-          <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+          <span className="px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded-full">
             {rooms.length} 間
           </span>
         </div>
         <a href="#" className="text-sm text-primary font-medium">查看全部</a>
       </div>
       
-      <div className="grid grid-cols-2 gap-3 flex-1">
+      <div className="grid grid-cols-2 gap-2">
         {rooms.map((room, index) => {
           const Icon = room.icon;
           const isSelected = selectedRoom === index;
@@ -417,35 +489,34 @@ const Rooms = () => {
             <div 
               key={room.name} 
               onClick={() => setSelectedRoom(index)}
-              className={`p-3 rounded-xl cursor-pointer transition-all ${
+              className={`p-3 rounded-xl cursor-pointer transition-all h-24 group ${
                 isSelected ? 'bg-primary/10 border-2 border-primary' : 'bg-slate-50 hover:bg-slate-100'
               }`}
             >
-              <div className="flex flex-col items-center text-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
+              {/* 頂部：Icon 左上 + 名稱右上 */}
+              <div className="flex justify-between items-start mb-2">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ${
                   isSelected ? 'bg-primary text-white' : 'bg-gray-200 text-gray-600'
                 }`}>
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-4 w-4" />
                 </div>
-                <p className={`font-semibold text-sm mb-1 ${
+                <p className={`font-semibold text-sm ${
                   isSelected ? 'text-primary' : 'text-gray-800'
                 }`}>
                   {room.name}
                 </p>
-                <p className="text-xs text-gray-500 mb-2">{room.devices} 個設備</p>
-                <div className="w-full space-y-1">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-gray-500">狀態</span>
-                    <span className={`font-medium ${
-                      room.status.includes('關閉') ? 'text-gray-600' : 'text-green-600'
-                    }`}>
-                      {room.status}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-gray-500">溫度</span>
-                    <span className="font-medium text-gray-700">{room.temperature}</span>
-                  </div>
+              </div>
+
+              {/* 底部：設備數量左下 + 狀態和溫度右下 */}
+              <div className="flex justify-between items-end">
+                <p className="text-xs text-gray-500">{room.devices} 個設備</p>
+                <div className="text-right">
+                  <p className={`text-xs font-medium ${
+                    room.status.includes('關閉') ? 'text-gray-600' : 'text-green-600'
+                  }`}>
+                    {room.status}
+                  </p>
+                  <p className="text-xs font-medium text-gray-700">{room.temperature}</p>
                 </div>
               </div>
             </div>
@@ -460,14 +531,17 @@ const Rooms = () => {
 // Automation Stats Component
 const AutomationStats = () => {
   const [activeScene, setActiveScene] = useState<string | null>('回家模式');
+  const availableScenes = useCountUp(4, 1200);
+  const activeSceneCount = useCountUp(1, 800);
+  const controlDevices = useCountUp(18, 1500);
 
   const scenes = [
     {
       name: '回家模式',
       icon: FiHome,
-      color: 'bg-green-500',
-      bgColor: 'bg-green-50',
-      textColor: 'text-green-700',
+      color: 'bg-cyan-500',
+      bgColor: 'bg-cyan-50',
+      textColor: 'text-cyan-700',
       isActive: activeScene === '回家模式',
       description: '自動調整燈光和溫度',
       deviceCount: 8,
@@ -476,9 +550,9 @@ const AutomationStats = () => {
     {
       name: '娛樂模式',
       icon: FiActivity,
-      color: 'bg-blue-500',
-      bgColor: 'bg-blue-50',
-      textColor: 'text-blue-700',
+      color: 'bg-cyan-500',
+      bgColor: 'bg-cyan-50',
+      textColor: 'text-cyan-700',
       isActive: activeScene === '娛樂模式',
       description: '調暗燈光，啟動音響',
       deviceCount: 5,
@@ -487,9 +561,9 @@ const AutomationStats = () => {
     {
       name: '工作模式',
       icon: FiSettings,
-      color: 'bg-purple-500',
-      bgColor: 'bg-purple-50',
-      textColor: 'text-purple-700',
+      color: 'bg-cyan-500',
+      bgColor: 'bg-cyan-50',
+      textColor: 'text-cyan-700',
       isActive: activeScene === '工作模式',
       description: '明亮燈光，專注環境',
       deviceCount: 6,
@@ -498,9 +572,9 @@ const AutomationStats = () => {
     {
       name: '節能模式',
       icon: FiShield,
-      color: 'bg-yellow-500',
-      bgColor: 'bg-yellow-50',
-      textColor: 'text-yellow-700',
+      color: 'bg-cyan-500',
+      bgColor: 'bg-cyan-50',
+      textColor: 'text-cyan-700',
       isActive: activeScene === '節能模式',
       description: '降低耗電，優化效率',
       deviceCount: 12,
@@ -523,7 +597,7 @@ const AutomationStats = () => {
         <div className="flex items-center space-x-3">
           <h3 className="font-bold text-lg text-gray-800">智能場景控制</h3>
           {currentActiveScene && (
-            <div className="flex items-center space-x-1 px-2 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+            <div className="flex items-center space-x-1 px-2 py-1 bg-cyan-100 text-cyan-700 text-xs font-medium rounded-full">
               {ActiveIcon && <ActiveIcon className="h-3 w-3" />}
               <span>{currentActiveScene.name}</span>
             </div>
@@ -534,17 +608,17 @@ const AutomationStats = () => {
       
       {/* 統計數據 */}
       <div className="grid grid-cols-3 gap-3 mb-4">
-        <div className="text-center p-2 bg-green-50 rounded-lg">
-          <p className="text-lg font-bold text-green-600">4</p>
-          <p className="text-xs text-green-600">可用場景</p>
+        <div className="text-center p-2 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors cursor-pointer">
+          <p className="text-lg font-bold text-cyan-600">{availableScenes}</p>
+          <p className="text-xs text-cyan-600">可用場景</p>
         </div>
-        <div className="text-center p-2 bg-blue-50 rounded-lg">
-          <p className="text-lg font-bold text-blue-600">1</p>
-          <p className="text-xs text-blue-600">啟動中</p>
+        <div className="text-center p-2 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors cursor-pointer">
+          <p className="text-lg font-bold text-cyan-600">{activeSceneCount}</p>
+          <p className="text-xs text-cyan-600">啟動中</p>
         </div>
-        <div className="text-center p-2 bg-purple-50 rounded-lg">
-          <p className="text-lg font-bold text-purple-600">18</p>
-          <p className="text-xs text-purple-600">控制設備</p>
+        <div className="text-center p-2 bg-cyan-50 rounded-lg hover:bg-cyan-100 transition-colors cursor-pointer">
+          <p className="text-lg font-bold text-cyan-600">{controlDevices}</p>
+          <p className="text-xs text-cyan-600">控制設備</p>
         </div>
       </div>
 
@@ -632,22 +706,22 @@ const AutoSchedules = () => {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm">
+    <div className="bg-white p-6 rounded-2xl shadow-sm h-[530px] flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center space-x-2">
           <h3 className="font-bold text-lg text-gray-800">自動排程</h3>
-          <span className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full font-medium">
+          <span className="bg-cyan-100 text-cyan-700 text-xs px-2 py-1 rounded-full font-medium">
             {schedules.filter(s => s.status === 'active').length} 個啟用
           </span>
         </div>
         <a href="#" className="text-sm text-primary font-medium">管理排程</a>
       </div>
-      <div className="space-y-3">
-        {schedules.map((schedule) => (
-          <div key={schedule.id} className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+      <div className="space-y-3 flex-1 overflow-y-auto">
+        {schedules.slice(0, 4).map((schedule) => (
+          <div key={schedule.id} className="p-3 bg-cyan-50 rounded-xl hover:bg-cyan-100 transition-colors group">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center space-x-2">
-                <FiClock className="h-4 w-4 text-gray-600" />
+                <FiClock className="h-4 w-4 text-gray-600 group-hover:scale-110 transition-transform duration-300" />
                 <span className="font-medium text-gray-800">{schedule.name}</span>
                 <span className={`w-2 h-2 rounded-full ${
                   schedule.status === 'active' ? 'bg-green-500' : 'bg-gray-400'
@@ -659,7 +733,7 @@ const AutoSchedules = () => {
               <div className="flex items-center space-x-2">
                 <div className="flex space-x-1">
                   {schedule.days.map((day, index) => (
-                    <span key={index} className="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-xs">
+                    <span key={index} className="text-cyan-700 px-1.5 py-0.5 text-xs">
                       {day}
                     </span>
                   ))}
@@ -729,29 +803,21 @@ const RecentActivities = () => {
       icon: FiHome, 
       color: 'text-green-500' 
     },
-    { 
-      type: 'info', 
-      message: '定時任務執行', 
-      detail: '自動關閉所有燈光和電器', 
-      time: '1小時前', 
-      location: '全屋',
-      icon: FiClock, 
-      color: 'text-blue-500' 
-    },
+
   ];
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm">
-      <div className="flex justify-between items-center mb-4">
+    <div className="bg-white p-6 rounded-2xl shadow-sm h-[460px] flex flex-col">
+      <div className="flex justify-between items-center mb-3">
         <h3 className="font-bold text-lg text-gray-800">近期活動</h3>
         <a href="#" className="text-sm text-primary font-medium">查看全部</a>
       </div>
-      <div className="space-y-3">
-        {activities.map((activity, index) => {
+      <div className="space-y-2 flex-1 overflow-y-auto">
+        {activities.slice(0, 5).map((activity, index) => {
           const Icon = activity.icon;
           return (
-            <div key={index} className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-xl transition-colors">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+            <div key={index} className="flex items-start space-x-3 p-3 bg-cyan-50 hover:bg-cyan-100 rounded-xl transition-colors cursor-pointer group">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300 ${
                 activity.type === 'alert' ? 'bg-red-100' : 
                 activity.type === 'success' ? 'bg-green-100' : 
                 activity.type === 'warning' ? 'bg-orange-100' : 'bg-blue-100'
@@ -762,7 +828,7 @@ const RecentActivities = () => {
                 <div className="flex items-center justify-between">
                   <p className="font-medium text-gray-800 text-sm">{activity.message}</p>
                   <div className="flex items-center space-x-2 text-xs text-gray-500">
-                    <span className="bg-gray-100 px-2 py-1 rounded-full">{activity.location}</span>
+                    <span className="bg-cyan-100 text-cyan-700 px-2 py-1 rounded-full">{activity.location}</span>
                     <span>{activity.time}</span>
                   </div>
                 </div>
