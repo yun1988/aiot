@@ -1,10 +1,29 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 import axios from 'axios'
 
-// GitHub Pages 環境也使用 localhost:3001 的 json-server
-const API_URL = process.env.NODE_ENV === 'production' && !window.location.hostname.includes('github.io')
-  ? '/api' 
-  : 'http://localhost:3001'
+// 檢測環境並設定 API URL
+const getAPIUrl = () => {
+  // 優先使用環境變數
+  const envApiUrl = (import.meta as any).env?.VITE_API_URL;
+  if (envApiUrl) {
+    return envApiUrl;
+  }
+  
+  // GitHub Pages 環境
+  if (window.location.hostname === 'yun1988.github.io') {
+    return 'http://localhost:3001';
+  }
+  // Vercel 環境
+  else if (window.location.hostname.includes('vercel.app')) {
+    return '/api';
+  }
+  // 本地開發環境
+  else {
+    return 'http://localhost:3001';
+  }
+};
+
+const API_URL = getAPIUrl();
 
 interface User {
   id: number

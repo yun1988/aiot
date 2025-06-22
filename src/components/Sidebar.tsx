@@ -15,11 +15,11 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
   const location = useLocation();
 
   const navItems = [
-    { icon: RiDashboardLine, name: 'Dashboard', path: '/' },
-    { icon: RiPieChartLine, name: 'Rooms', path: '/rooms' },
-    { icon: RiComputerLine, name: 'Devices', path: '/devices' },
-    { icon: RiSettings3Line, name: 'Settings', path: '/settings' },
-    { icon: RiBarChartLine, name: 'Analytics', path: '/analytics' },
+    { icon: RiDashboardLine, name: '儀表板', path: '/dashboard' },
+    { icon: RiPieChartLine, name: '房間', path: '/rooms' },
+    { icon: RiComputerLine, name: '設備', path: '/devices' },
+    { icon: RiSettings3Line, name: '設定', path: '/settings' },
+    { icon: RiBarChartLine, name: '分析', path: '/analytics' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -71,7 +71,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
               className={`w-full flex items-center py-3 rounded-lg transition-colors duration-200 group ${isSidebarOpen ? 'px-4 bg-primary/10 text-primary font-semibold' : 'justify-center text-gray-500 hover:text-primary hover:bg-primary/10'}`}
             >
               {isSidebarOpen ? <RiMenuFoldLine className="h-6 w-6 flex-shrink-0" /> : <RiMenuUnfoldLine className="h-6 w-6 flex-shrink-0" />}
-              <span className={`ml-4 text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-200 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 w-0'}`}>Collapse</span>
+              <span className={`ml-4 text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-200 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 w-0'}`}>收合</span>
             </button>
             <hr className="mx-4 border-gray-200" />
              <Link
@@ -79,7 +79,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
                 className={`flex items-center py-3 rounded-lg transition-colors duration-200 group ${isSidebarOpen ? 'px-4' : 'justify-center'} ${isActive('/about') ? 'text-primary font-semibold' : 'text-gray-500 hover:text-primary hover:bg-primary/10'}`}
               >
                 <RiInformationLine className="h-6 w-6 flex-shrink-0" />
-                <span className={`ml-4 text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-200 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 w-0'}`}>About</span>
+                <span className={`ml-4 text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-200 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 w-0'}`}>關於</span>
               </Link>
             <button
               onClick={logout}

@@ -3,6 +3,7 @@ import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-d
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Home from './pages/Home'
+import Room from './pages/Room'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import DashboardLayout from './components/DashboardLayout'
 
@@ -28,6 +29,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<PrivateRoute><Home /></PrivateRoute>} />
+          <Route path="/rooms" element={<PrivateRoute><Room /></PrivateRoute>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
