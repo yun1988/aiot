@@ -154,32 +154,46 @@ const OverallStats = () => (
 // Quick Controls Component
 const QuickControls = () => {
   const [deviceStates, setDeviceStates] = useState<Record<string, boolean>>({
-    '智慧集線器': true,
-    '臥室空調': true,
-    '居家模式': false,
-    '全部電源': true,
     '全部燈光': true,
+    '全部電源': true,
+    '離家模式': false,
+    '睡眠模式': false,
   });
 
   const quickDevices = [
-    { name: '智慧集線器', icon: MdOutlineDeviceHub, status: '線上' },
-    { name: '臥室空調', icon: FiZap, status: '開啟' },
-    { name: '居家模式', icon: FiHome, status: '關閉' },
-    { name: '全部電源', icon: FiZap, status: '開啟' },
-    { name: '全部燈光', icon: FiSun, status: '開啟' },
+    { name: '全部燈光', icon: FiSun, status: '開啟', type: 'master' },
+    { name: '全部電源', icon: FiZap, status: '開啟', type: 'master' },
+    { name: '離家模式', icon: FiMapPin, status: '關閉', type: 'scene' },
+    { name: '睡眠模式', icon: FiClock, status: '關閉', type: 'scene' },
   ];
 
   const handleToggle = (deviceName: string) => {
     setDeviceStates(prev => ({ ...prev, [deviceName]: !prev[deviceName] }));
   };
 
-  const handleMasterControl = (controlType: '全部電源' | '全部燈光') => {
+  const handleMasterControl = (controlType: string) => {
     const newState = !deviceStates[controlType];
     setDeviceStates(prev => ({ ...prev, [controlType]: newState }));
     
     // 顯示操作提示
     const action = newState ? '開啟' : '關閉';
-    const target = controlType === '全部電源' ? '所有電源設備' : '所有燈光設備';
+    let target = '';
+    
+    switch(controlType) {
+      case '全部電源':
+        target = '所有電源設備';
+        break;
+      case '全部燈光':
+        target = '所有燈光設備';
+        break;
+      case '離家模式':
+        target = '離家安全模式';
+        break;
+      case '睡眠模式':
+        target = '睡眠環境模式';
+        break;
+    }
+    
     console.log(`${action} ${target}`);
   };
 
@@ -190,20 +204,26 @@ const QuickControls = () => {
         {quickDevices.map(device => {
           const isOn = deviceStates[device.name];
           const Icon = device.icon;
-          const isMasterControl = device.name === '全部電源' || device.name === '全部燈光';
+          const isMasterControl = device.type === 'master';
+          const isScene = device.type === 'scene';
           
           return (
             <div key={device.name} className={`flex items-center justify-between p-3 rounded-xl ${
-              isMasterControl ? 'bg-red-50 border border-red-100' : 'bg-gray-50'
+              isMasterControl ? 'bg-red-50 border border-red-100' : 
+              isScene ? 'bg-purple-50 border border-purple-100' : 'bg-gray-50'
             }`}>
               <div className="flex items-center space-x-3">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  isOn ? (isMasterControl ? 'bg-red-500 text-white' : 'bg-primary text-white') : 'bg-gray-300 text-gray-600'
+                  isOn ? (isMasterControl ? 'bg-red-500 text-white' : 
+                         isScene ? 'bg-purple-500 text-white' : 'bg-primary text-white') : 'bg-gray-300 text-gray-600'
                 }`}>
                   <Icon className="h-4 w-4" />
                 </div>
                 <div>
-                  <p className={`font-medium ${isMasterControl ? 'text-red-700' : 'text-gray-800'}`}>
+                  <p className={`font-medium ${
+                    isMasterControl ? 'text-red-700' : 
+                    isScene ? 'text-purple-700' : 'text-gray-800'
+                  }`}>
                     {device.name}
                   </p>
                   <p className="text-xs text-gray-500">
@@ -212,9 +232,10 @@ const QuickControls = () => {
                 </div>
               </div>
         <button
-                onClick={() => isMasterControl ? handleMasterControl(device.name as '全部電源' | '全部燈光') : handleToggle(device.name)}
+                onClick={() => handleMasterControl(device.name)}
                 className={`w-12 h-6 rounded-full p-1 flex items-center transition-colors ${
-                  isOn ? (isMasterControl ? 'bg-red-500 justify-end' : 'bg-primary justify-end') : 'bg-gray-200 justify-start'
+                  isOn ? (isMasterControl ? 'bg-red-500 justify-end' : 
+                         isScene ? 'bg-purple-500 justify-end' : 'bg-primary justify-end') : 'bg-gray-200 justify-start'
                 }`}
               >
                 <div className="w-4 h-4 rounded-full bg-white shadow-md"></div>
@@ -226,7 +247,7 @@ const QuickControls = () => {
       
       <div className="mt-4 pt-4 border-t border-gray-100">
         <p className="text-xs text-gray-500 text-center">
-          主控開關會影響所有相關設備
+          紅色為主控開關，紫色為場景模式
         </p>
       </div>
     </div>
