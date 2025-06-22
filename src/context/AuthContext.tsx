@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 import axios from 'axios'
 
-const API_URL = 'http://localhost:3001'
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? '/api' 
+  : 'http://localhost:3001'
 
 interface User {
   id: number
