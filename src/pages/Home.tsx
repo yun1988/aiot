@@ -338,7 +338,7 @@ const ConnectedHubs = () => {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm h-[432px] flex flex-col">
+    <div className="bg-white p-6 rounded-2xl shadow-sm h-[390px] flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-bold text-lg text-gray-800">智能網關</h3>
         <a href="#" className="text-sm text-primary font-medium">查看全部</a>
