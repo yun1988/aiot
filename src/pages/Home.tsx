@@ -3,7 +3,7 @@ import { IconType } from 'react-icons';
 import { 
   FiCloud, FiWind, FiCpu, FiUsers, FiHardDrive, FiSun, FiThermometer, FiZap, FiPlus, 
   FiSearch, FiWifi, FiBattery, FiMoreVertical, FiChevronRight, FiChevronLeft, FiMapPin,
-  FiHome, FiActivity, FiSettings, FiAlertCircle, FiCheckCircle, FiClock
+  FiHome, FiActivity, FiSettings, FiAlertCircle, FiCheckCircle, FiClock, FiShield
 } from 'react-icons/fi';
 import { BsDropletFill, BsSnow, BsCloudSun } from 'react-icons/bs';
 import { FaTemperatureHigh, FaTemperatureLow } from 'react-icons/fa';
@@ -476,183 +476,116 @@ const Rooms = () => {
 
 // Automation Stats Component
 const AutomationStats = () => {
-  const [activeScene, setActiveScene] = useState<string | null>(null);
-  const [showDetails, setShowDetails] = useState<string | null>(null);
+  const [activeScene, setActiveScene] = useState<string | null>('回家模式');
 
   const scenes = [
     {
-      name: '早安場景',
-      icon: FiSun,
-      color: 'bg-orange-500',
-      bgColor: 'bg-orange-50',
-      textColor: 'text-orange-700',
-      isActive: activeScene === '早安場景',
-      schedule: '每日 07:00 自動執行',
-      automations: [
-        { name: '客廳燈光', action: '開啟 80%', icon: FiSun, type: '即時' },
-        { name: '溫度調節', action: '設定 24°C', icon: FiThermometer, type: '即時' },
-        { name: '窗簾控制', action: '開啟 60%', icon: FiHome, type: '延遲2分鐘' },
-        { name: '音響系統', action: '播放新聞', icon: FiActivity, type: '延遲5分鐘' },
-        { name: '咖啡機', action: '開始沖泡', icon: FiZap, type: '延遲3分鐘' },
-      ]
+      name: '回家模式',
+      icon: FiHome,
+      color: 'bg-green-500',
+      bgColor: 'bg-green-50',
+      textColor: 'text-green-700',
+      isActive: activeScene === '回家模式',
+      description: '自動調整燈光和溫度',
+      deviceCount: 8,
+      lastActive: '剛才'
     },
     {
-      name: '睡眠模式',
-      icon: FiClock,
-      color: 'bg-indigo-500',
-      bgColor: 'bg-indigo-50',
-      textColor: 'text-indigo-700',
-      isActive: activeScene === '睡眠模式',
-      schedule: '每日 22:00 + 感應觸發',
-      automations: [
-        { name: '娛樂設備', action: '關閉', icon: FiActivity, type: '即時' },
-        { name: '所有燈光', action: '關閉', icon: FiSun, type: '延遲1分鐘' },
-        { name: '夜燈', action: '開啟 10%', icon: FiSun, type: '延遲1分鐘' },
-        { name: '溫度調節', action: '設定 22°C', icon: FiThermometer, type: '延遲2分鐘' },
-        { name: '安全系統', action: '啟動', icon: FiAlertCircle, type: '延遲5分鐘' },
-      ]
+      name: '娛樂模式',
+      icon: FiActivity,
+      color: 'bg-blue-500',
+      bgColor: 'bg-blue-50',
+      textColor: 'text-blue-700',
+      isActive: activeScene === '娛樂模式',
+      description: '調暗燈光，啟動音響',
+      deviceCount: 5,
+      lastActive: '昨天 20:30'
     },
     {
-      name: '離家模式',
-      icon: FiMapPin,
-      color: 'bg-red-500',
-      bgColor: 'bg-red-50',
-      textColor: 'text-red-700',
-      isActive: activeScene === '離家模式',
-      schedule: '地理圍欄觸發',
-      automations: [
-        { name: '門鎖檢查', action: '確認上鎖', icon: FiHome, type: '即時' },
-        { name: '安全系統', action: '啟動', icon: FiAlertCircle, type: '延遲30秒' },
-        { name: '所有電源', action: '關閉', icon: FiZap, type: '延遲1分鐘' },
-        { name: '溫度調節', action: '節能模式', icon: FiThermometer, type: '延遲2分鐘' },
-      ]
+      name: '工作模式',
+      icon: FiSettings,
+      color: 'bg-purple-500',
+      bgColor: 'bg-purple-50',
+      textColor: 'text-purple-700',
+      isActive: activeScene === '工作模式',
+      description: '明亮燈光，專注環境',
+      deviceCount: 6,
+      lastActive: '今天 09:15'
+    },
+    {
+      name: '節能模式',
+      icon: FiShield,
+      color: 'bg-yellow-500',
+      bgColor: 'bg-yellow-50',
+      textColor: 'text-yellow-700',
+      isActive: activeScene === '節能模式',
+      description: '降低耗電，優化效率',
+      deviceCount: 12,
+      lastActive: '今天 14:20'
     },
   ];
 
   const handleSceneActivation = (sceneName: string) => {
     setActiveScene(activeScene === sceneName ? null : sceneName);
-    // 模擬場景執行
-    if (activeScene !== sceneName) {
-      console.log(`執行場景: ${sceneName}`);
-      const scene = scenes.find(s => s.name === sceneName);
-      scene?.automations.forEach(automation => {
-        console.log(`- ${automation.name}: ${automation.action}`);
-      });
-    }
+    console.log(`執行場景: ${sceneName}`);
   };
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-sm">
-      <h3 className="font-bold text-lg text-gray-800 mb-4">智能場景控制</h3>
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="font-bold text-lg text-gray-800">智能場景控制</h3>
+        <a href="#" className="text-sm text-primary font-medium">查看全部</a>
+      </div>
       
       {/* 統計數據 */}
       <div className="grid grid-cols-3 gap-3 mb-4">
         <div className="text-center p-2 bg-green-50 rounded-lg">
-          <p className="text-lg font-bold text-green-600">8</p>
-          <p className="text-xs text-green-600">排程任務</p>
+          <p className="text-lg font-bold text-green-600">4</p>
+          <p className="text-xs text-green-600">可用場景</p>
         </div>
         <div className="text-center p-2 bg-blue-50 rounded-lg">
-          <p className="text-lg font-bold text-blue-600">5</p>
-          <p className="text-xs text-blue-600">條件觸發</p>
+          <p className="text-lg font-bold text-blue-600">1</p>
+          <p className="text-xs text-blue-600">啟動中</p>
         </div>
         <div className="text-center p-2 bg-purple-50 rounded-lg">
-          <p className="text-lg font-bold text-purple-600">3</p>
-          <p className="text-xs text-purple-600">場景模式</p>
-        </div>
-      </div>
-
-      {/* 自動化排程預覽 */}
-      <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-sm font-medium text-gray-700">今日排程</p>
-          <span className="text-xs text-gray-500">下一個: 19:30</span>
-        </div>
-        <div className="space-y-1">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-600">07:00 早安場景</span>
-            <span className="text-green-600">✓ 已執行</span>
-          </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-600">19:30 晚餐模式</span>
-            <span className="text-blue-600">⏰ 待執行</span>
-          </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-gray-600">22:00 睡眠準備</span>
-            <span className="text-gray-400">⏰ 待執行</span>
-          </div>
+          <p className="text-lg font-bold text-purple-600">22</p>
+          <p className="text-xs text-purple-600">控制設備</p>
         </div>
       </div>
 
       {/* 場景按鈕 */}
-      <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-3">
         {scenes.map(scene => {
           const Icon = scene.icon;
           const isActive = scene.isActive;
-          const isExpanded = showDetails === scene.name;
           
           return (
-            <div key={scene.name} className="space-y-2">
-              <button
-                onClick={() => handleSceneActivation(scene.name)}
-                onMouseEnter={() => setShowDetails(scene.name)}
-                onMouseLeave={() => setShowDetails(null)}
-                className={`w-full p-3 rounded-xl text-sm font-medium transition-all duration-200 flex items-center justify-between ${
-                  isActive 
-                    ? `${scene.color} text-white shadow-lg` 
-                    : `${scene.bgColor} ${scene.textColor} hover:shadow-md`
-                }`}
-              >
-                <div className="flex items-center space-x-2">
-                  <Icon className="h-4 w-4" />
-                  <span>{scene.name}</span>
-                  {isActive && (
-                    <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                  )}
+            <button
+              key={scene.name}
+              onClick={() => handleSceneActivation(scene.name)}
+              className={`p-4 rounded-xl text-left transition-all duration-200 ${
+                isActive 
+                  ? `${scene.color} text-white shadow-lg` 
+                  : `${scene.bgColor} ${scene.textColor} hover:shadow-md border border-gray-100`
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <Icon className="h-5 w-5" />
+                {isActive && (
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                )}
+              </div>
+              <div>
+                <p className="font-medium text-sm mb-1">{scene.name}</p>
+                <p className={`text-xs opacity-75 mb-2`}>
+                  {scene.description}
+                </p>
+                <div className="flex justify-between items-center text-xs opacity-60">
+                  <span>{scene.deviceCount} 個設備</span>
+                  <span>{scene.lastActive}</span>
                 </div>
-                <div className="text-right">
-                  <div className="text-xs opacity-75">
-                    {scene.automations.length} 項動作
-                  </div>
-                  <div className="text-xs opacity-60">
-                    {scene.schedule}
-                  </div>
-                </div>
-              </button>
-              
-                             {/* 展開的自動化詳情 */}
-               {isExpanded && (
-                 <div className={`${scene.bgColor} rounded-lg p-3 space-y-2 transition-all duration-200`}>
-                   <p className={`text-xs font-medium ${scene.textColor} mb-2`}>
-                     自動化排程執行順序：
-                   </p>
-                   <div className="grid grid-cols-1 gap-1">
-                     {scene.automations.map((automation, index) => {
-                       const AutoIcon = automation.icon;
-                       return (
-                         <div key={index} className="flex items-center justify-between text-xs">
-                           <div className="flex items-center space-x-2">
-                             <AutoIcon className={`h-3 w-3 ${scene.textColor}`} />
-                             <span className="text-gray-700">{automation.name}</span>
-                             <span className="text-gray-500">→</span>
-                             <span className={`font-medium ${scene.textColor}`}>
-                               {automation.action}
-                             </span>
-                           </div>
-                           <span className="text-xs text-gray-500 bg-white px-2 py-0.5 rounded-full">
-                             {automation.type}
-                           </span>
-                         </div>
-                       );
-                     })}
-                   </div>
-                   <div className="mt-2 pt-2 border-t border-gray-200">
-                     <p className="text-xs text-gray-600">
-                       📅 排程設定: {scene.schedule}
-                     </p>
-                   </div>
-                 </div>
-               )}
-            </div>
+              </div>
+            </button>
           );
         })}
       </div>
@@ -660,7 +593,7 @@ const AutomationStats = () => {
       {/* 底部提示 */}
       <div className="mt-4 pt-4 border-t border-gray-100">
         <p className="text-xs text-gray-500 text-center">
-          {activeScene ? `${activeScene} 已啟動` : '懸停查看場景詳情，點擊啟動'}
+          {activeScene ? `${activeScene} 已啟動` : '點擊切換場景模式'}
         </p>
       </div>
     </div>
