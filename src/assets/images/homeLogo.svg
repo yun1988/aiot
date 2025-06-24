@@ -1,0 +1,21 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- 房屋主體 - 使用藍色填充 -->
+  <path d="M20 50L50 18L80 50V78C80 80 78 82 76 82H24C22 82 20 80 20 78V50Z" 
+        fill="#0EA5E9" stroke="none"/>
+  
+  <!-- 門 - 使用白色 -->
+  <rect x="43" y="65" width="14" height="17" rx="2" fill="white"/>
+  
+  <!-- WiFi 信號線 - 使用白色 -->
+  <path d="M59 41C61.5 41 63.5 39 63.5 36.5C63.5 34 61.5 32 59 32" 
+        fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  
+  <path d="M62 45C66 45 69 42 69 36.5C69 31 66 28 62 28" 
+        fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  
+  <path d="M65 49C71 49 76 44 76 36.5C76 29 71 24 65 24" 
+        fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  
+  <!-- WiFi 中心點 - 使用白色 -->
+  <circle cx="57.5" cy="36.5" r="2" fill="white"/>
+</svg> 

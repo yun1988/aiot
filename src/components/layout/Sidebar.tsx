@@ -1,9 +1,10 @@
 import React, { Fragment } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  RiDashboardLine, RiPieChartLine, RiComputerLine, RiSettings3Line, RiBarChartLine, RiInformationLine, RiLogoutBoxRLine, RiMenuFoldLine, RiMenuUnfoldLine, RiFlashlightFill 
+  RiDashboardLine, RiPieChartLine, RiComputerLine, RiSettings3Line, RiBarChartLine, RiInformationLine, RiLogoutBoxRLine, RiMenuFoldLine, RiMenuUnfoldLine, RiFlashlightFill, RiHomeLine 
 } from 'react-icons/ri';
 import { useAuth } from 'context/AuthContext';
+import SmartHomeLogo from 'components/ui/SmartHomeLogo';
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -32,26 +33,26 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
         aria-hidden="true"
       ></div>
 
-      <aside className={`fixed top-0 left-0 h-full bg-white flex flex-col shadow-lg transition-all duration-300 z-40 ${isSidebarOpen ? 'w-48' : 'w-16'} transform lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} overflow-hidden`}>
+      <aside className={`fixed top-0 left-0 h-full bg-white flex flex-col shadow-lg transition-all duration-300 z-40 ${isSidebarOpen ? 'w-52' : 'w-16'} transform lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} overflow-hidden`}>
         <div className="flex flex-col h-full">
                     <div className="flex items-center justify-center h-16">
             {isSidebarOpen ? (
                 <div className="w-full px-4">
                   <Link to="/dashboard" className="flex items-center h-12 px-4 rounded-lg relative">
-                    <div className="w-6 flex items-center justify-center">
-                      <div className="bg-primary p-1 rounded-lg">
-                        <RiFlashlightFill className="h-5 w-5 text-white" />
+                                          <div className="w-6 flex items-center justify-center">
+                        <div className="bg-primary p-1 rounded-lg">
+                          <SmartHomeLogo variant="icon" size={20} className="text-white" />
+                        </div>
                       </div>
-                    </div>
-                    <div className="overflow-hidden">
-                      <span className={`ml-3 text-lg font-semibold whitespace-nowrap transition-all duration-300 ${isSidebarOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'} block`}>AIoT</span>
-                    </div>
+                                          <div className="overflow-hidden">
+                        <span className={`ml-3 text-lg font-semibold whitespace-nowrap transition-all duration-300 ${isSidebarOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'} block`}>Smart Home</span>
+                      </div>
                   </Link>
                 </div>
               ) : (
                 <div className="w-16 flex items-center justify-center">
                   <Link to="/dashboard" className="bg-primary p-1 rounded-lg flex items-center justify-center">
-                    <RiFlashlightFill className="h-5 w-5 text-white" />
+                    <SmartHomeLogo variant="icon" size={20} className="text-white" />
                   </Link>
                 </div>
               )}
