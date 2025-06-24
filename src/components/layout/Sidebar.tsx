@@ -49,13 +49,13 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
 
           <hr className={`border-gray-200 ${isSidebarOpen ? 'mx-4' : ''}`} />
 
-          <nav className={`flex-1 mt-4 ${isSidebarOpen ? 'px-4' : 'px-2'}`}>
-            <ul>
+          <nav className={`flex-1 mt-4 ${isSidebarOpen ? 'px-4' : ''}`}>
+            <ul className={isSidebarOpen ? '' : 'flex flex-col items-center'}>
               {navItems.map((item) => (
                 <li key={item.name} className="mb-2">
                   <Link
                     to={item.path}
-                    className={`flex items-center rounded-lg transition-colors duration-200 group ${isSidebarOpen ? 'px-4 py-3' : 'h-12 justify-center mx-1'} ${isActive(item.path) ? 'text-primary font-semibold' : 'text-gray-500 hover:text-primary hover:bg-primary/10'}`}
+                    className={`flex items-center rounded-lg transition-colors duration-200 group ${isSidebarOpen ? 'px-4 py-3' : 'w-12 h-12 justify-center'} ${isActive(item.path) ? 'text-primary font-semibold' : 'text-gray-500 hover:text-primary hover:bg-primary/10'}`}
                   >
                     <item.icon className="h-6 w-6 flex-shrink-0" />
                     <span className={`ml-4 text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-200 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 w-0'}`}>{item.name}</span>
@@ -65,25 +65,25 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) => {
             </ul>
           </nav>
 
-          <div className={`py-6 space-y-2 ${isSidebarOpen ? 'px-4' : 'px-2'}`}>
+          <div className={`py-6 space-y-2 ${isSidebarOpen ? 'px-4' : 'flex flex-col items-center'}`}>
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className={`w-full flex items-center rounded-lg transition-colors duration-200 group ${isSidebarOpen ? 'px-4 py-3 bg-primary/10 text-primary font-semibold' : 'h-12 justify-center mx-1 text-gray-500 hover:text-primary hover:bg-primary/10'}`}
+              className={`flex items-center rounded-lg transition-colors duration-200 group ${isSidebarOpen ? 'w-full px-4 py-3 bg-primary/10 text-primary font-semibold' : 'w-12 h-12 justify-center text-gray-500 hover:text-primary hover:bg-primary/10'}`}
             >
               {isSidebarOpen ? <RiMenuFoldLine className="h-6 w-6 flex-shrink-0" /> : <RiMenuUnfoldLine className="h-6 w-6 flex-shrink-0" />}
               <span className={`ml-4 text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-200 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 w-0'}`}>收合</span>
             </button>
-            <hr className={`border-gray-200 ${isSidebarOpen ? '' : ''}`} />
+            <hr className={`border-gray-200 ${isSidebarOpen ? 'w-full' : 'w-12'}`} />
              <Link
                 to="/about"
-                className={`flex items-center rounded-lg transition-colors duration-200 group ${isSidebarOpen ? 'px-4 py-3' : 'h-12 justify-center mx-1'} ${isActive('/about') ? 'text-primary font-semibold' : 'text-gray-500 hover:text-primary hover:bg-primary/10'}`}
+                className={`flex items-center rounded-lg transition-colors duration-200 group ${isSidebarOpen ? 'w-full px-4 py-3' : 'w-12 h-12 justify-center'} ${isActive('/about') ? 'text-primary font-semibold' : 'text-gray-500 hover:text-primary hover:bg-primary/10'}`}
               >
                 <RiInformationLine className="h-6 w-6 flex-shrink-0" />
                 <span className={`ml-4 text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-200 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 w-0'}`}>關於</span>
               </Link>
             <button
               onClick={logout}
-              className={`w-full flex items-center rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors duration-200 group ${isSidebarOpen ? 'px-4 py-3' : 'h-12 justify-center mx-1'}`}
+              className={`flex items-center rounded-lg text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors duration-200 group ${isSidebarOpen ? 'w-full px-4 py-3' : 'w-12 h-12 justify-center'}`}
             >
               <RiLogoutBoxRLine className="h-6 w-6 flex-shrink-0" />
               <span className={`ml-4 text-sm font-medium whitespace-nowrap overflow-hidden transition-all duration-200 ${isSidebarOpen ? 'opacity-100' : 'opacity-0 w-0'}`}>登出</span>
