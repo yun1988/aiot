@@ -10,7 +10,7 @@ const Header = ({ toggleSidebar }: HeaderProps) => {
   const { user } = useAuth();
 
   return (
-    <header className="h-20 bg-white border-b flex items-center justify-between px-8">
+    <header className="h-16 bg-white flex items-center justify-between px-8">
       {/* Left side: Toggle button for mobile */}
       <div className="flex items-center">
         <button onClick={toggleSidebar} className="text-gray-500 hover:text-gray-800 lg:hidden">
